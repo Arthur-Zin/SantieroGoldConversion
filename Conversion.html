@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            max-width: 400px;
+        }
+        .control-group {
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .results {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #ccc;
+        }
+        .results p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <strong>Check Conversion Rates</strong>
+
+    <!-- Gold to Money -->
+    <div class="control-group">
+        <label for="goldInput">Convert Santierio Gold:</label>
+        <input type="number" id="goldInput" placeholder="Enter Santierio gold amount" min="0" oninput="convertGold()">
+    </div>
+
+    <!-- Money to Gold -->
+    <div class="control-group">
+        <label for="moneyInput">Convert Banquer Money (Gross):</label>
+        <input type="number" id="moneyInput" placeholder="Enter Banquer money amount" min="0" oninput="convertMoney()">
+    </div>
+
+    <!-- Live Results Breakdown -->
+    <div class="results">
+        <p>Santierio Gold: <span id="displayGold">0</span></p>
+        <p>Gross Banquer Money: <span id="grossAmount">0</span></p>
+        <p>Tax (5%): <span id="taxAmount">0</span></p>
+        <p><strong>Net Banquer Money: <span id="netAmount">0</span></strong></p>
+    </div>
+
+    <script>
+        const rate = 25000;
+        const taxRate = 0.05;
+
+        // Elements
+        const goldInput = document.getElementById('goldInput');
+        const moneyInput = document.getElementById('moneyInput');
+        const displayGold = document.getElementById('displayGold');
+        const grossAmount = document.getElementById('grossAmount');
+        const taxAmount = document.getElementById('taxAmount');
+        const netAmount = document.getElementById('netAmount');
+
+        function updateUI(gold, gross, tax, net) {
+            displayGold.innerText = gold.toLocaleString(undefined, {maximumFractionDigits: 4});
+            grossAmount.innerText = gross.toLocaleString(undefined, {maximumFractionDigits: 2});
+            taxAmount.innerText = tax.toLocaleString(undefined, {maximumFractionDigits: 2});
+            netAmount.innerText = net.toLocaleString(undefined, {maximumFractionDigits: 2});
+        }
+
+        function convertGold() {
+            const gold = parseFloat(goldInput.value) || 0;
+            moneyInput.value = ""; // Clear other input to avoid confusion
+            
+            const gross = gold * rate;
+            const tax = gross * taxRate;
+            const net = gross - tax;
+            
+            updateUI(gold, gross, tax, net);
+        }
+
+        function convertMoney() {
+            const gross = parseFloat(moneyInput.value) || 0;
+            goldInput.value = ""; // Clear other input to avoid confusion
+            
+            const gold = gross / rate;
+            const tax = gross * taxRate;
+            const net = gross - tax;
+            
+            updateUI(gold, gross, tax, net);
+        }
+    </script>
+
+</body>
+</html>
